@@ -1,0 +1,66 @@
+<body class="glassmorphic-background">
+  <div>
+    <mat-toolbar color="primary" class="toolbar">
+      <span class="app-title">Movie Search</span>
+      <button mat-button routerLink="/">Home</button>
+      <button mat-button routerLink="/genres">Genres</button>
+      <button mat-button routerLink="/country">Country</button>
+      <button mat-button routerLink="/movies">Movies</button>
+      <button mat-button routerLink="/tv-series">TV-Series</button>
+      <button mat-button routerLink="/top-imdb">Top IMDb</button>
+      <span class="spacer"></span>
+      <button mat-icon-button>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="search-container">
+      <div class="title-search">
+        <mat-form-field appearance="fill" class="search-field" style="width: 80%;">
+          <mat-label>Enter Movie/Series Title</mat-label>
+          <input matInput [(ngModel)]="titleInputValue" name="titleInputValue" (keyup.enter)="search()" />
+          <mat-spinner *ngIf="loading" [diameter]="70" [strokeWidth]="3"></mat-spinner>
+          <mat-icon matSuffix (click)="clearField()" color="primary">clear</mat-icon>
+        </mat-form-field>
+
+        <button style="margin-left:10px" mat-raised-button color="primary" *ngIf="!identifierInputValue && !titleInputValue" (click)="search()">Search</button>
+
+        <p class="search-hint" (click)="switchSearchMode()">
+          Not finding a search match? Try {{ isSearchByTitle ? 'IMDb identifier.' : 'Movie/Series title.' }}
+        </p>     
+       </div>
+    </div>
+
+    <mat-card *ngIf="!loading && movieData" class="movie-card horizontal">
+      <div class="movie-poster">
+        <img mat-card-image [src]="movieData.Poster" alt="Movie Poster" />
+        <mat-card-actions class="poster-overlay">
+          <mat-icon *ngIf="movieData.imdbRating">star</mat-icon>
+          <span>{{ movieData.imdbRating || 'N/A' }}</span>
+        </mat-card-actions>
+      </div>
+      <div class="movie-details">
+        <h2 mat-card-title style="font-size: 24px;">{{ movieData.Title }}</h2>
+        <div class="details-section">
+          <mat-icon>calendar_today</mat-icon>
+          <span><strong>Released:</strong> {{ movieData.Released }}</span>
+          <span class="runtime"><strong>Runtime:</strong> {{ movieData.Runtime }}</span>
+        </div>
+        <div class="details-section">
+          <mat-icon>star_rate</mat-icon>
+          <span style="color:#1e2d1e;"><strong>Rating:</strong> {{ movieData.imdbRating || 'N/A' }}</span>
+        </div>
+        <mat-card-content class="movie-info" color="accent">
+          <p><strong>Plot:</strong> {{ movieData.Plot }}</p>
+          <p><strong>Genre:</strong> {{ movieData.Genre }}</p>
+          <p><strong>Language:</strong> {{ movieData.Language }}</p>
+          <p><strong>Country:</strong> {{ movieData.Country }}</p>
+          <p><strong>Actors:</strong> {{ movieData.Actors }}</p>
+        </mat-card-content>
+      </div>
+    </mat-card>
+    <div *ngIf="!loading && !movieData" class="no-movie-data">
+      No movie data available.
+    </div>
+  </div>
+</body>
